@@ -3,10 +3,10 @@
 import math
 
 
-def correlation(subkey_i, voltage_j, power_estimates_h, power_traces_t):
+def correlation(subkey_i: int, voltage_j: int, power_estimates_h: [], power_traces_t: []):
     """
-    subkey_i: the subkey
-    voltage_j: the measured voltage
+    subkey_i: the subkey index
+    voltage_j: the measured voltage index (for the trace)
     power_estimates_h: power consumption models, D plaintexts by I subkeys
         power_estimates_h[d][i] refers to power estimate for trace d and subkey i
     power_traces_t: D power traces, each with T data points
