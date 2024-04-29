@@ -85,11 +85,11 @@ def correlation(subkey_i: int, voltage_j: int, power_estimates_h: [], power_trac
     sum_tdj = 0
     sum_tdj_sqr = 0
     for d_iter in range(D):
-        s1 += power_estimates_h[d_iter][subkey_i] * power_traces_t[d_iter][voltage_j]
+        s1 += power_estimates_h[d_iter][subkey_i] * power_traces_t[d_iter][voltage_j][1]
         sum_hdi += power_estimates_h[d_iter][subkey_i]
-        sum_tdj += power_traces_t[d_iter][voltage_j]
+        sum_tdj += power_traces_t[d_iter][voltage_j][1]
         sum_hdi_sqr += power_estimates_h[d_iter][subkey_i] * power_estimates_h[d_iter][subkey_i]
-        sum_tdj_sqr += power_traces_t[d_iter][voltage_j] * power_traces_t[d_iter][voltage_j]
+        sum_tdj_sqr += power_traces_t[d_iter][voltage_j][1] * power_traces_t[d_iter][voltage_j][1]
     numerator = (D * s1) - (sum_hdi * sum_tdj)
 
     # Denominator

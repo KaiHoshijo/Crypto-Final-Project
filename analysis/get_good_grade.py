@@ -5,7 +5,7 @@ def do_stuff():
     # 1. Read traces t
     power_traces = get_traces.get_traces()
 
-    plaintexts = get_traces.get_plaintexts()  # TODO: Read plaintexts from waveforms.txt
+    plaintexts = get_traces.get_plaintexts()
     subkeys = get_analysis.gen_subkeys()
 
     # 2. Calculate intermediate values for all d (plaintext block) and k (subkey) combinations

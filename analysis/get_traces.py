@@ -1,3 +1,5 @@
+import re
+
 from numpy import genfromtxt
 import numpy as np
 import os
@@ -15,10 +17,21 @@ def get_traces():
         for wavename in os.listdir('waveforms'):
             # First two rows are name columns
             data = genfromtxt(f'waveforms/{wavename}', delimiter=',')[2:]
-            # TODO: delete time column because we only need voltage
-            #       numpy.delete(data, 0, 1)
             traces[i] = data
             i += 1
         # Save the traces so that this expensive operation doesn't occur often
         np.savez('analysis/traces.npz', traces)
     return traces
+
+
+def get_plaintexts() -> []:
+    pattern = re.compile(pattern="Input (.*)")
+    with open(file="waveforms.txt", mode="r") as f:
+        lines = f.readlines()
+    plaintexts = []
+    for line in lines:
+        matched = pattern.match(line)
+        if matched:
+            plaintext = matched.group(1)
+            plaintexts.append(plaintext)
+    return plaintexts
