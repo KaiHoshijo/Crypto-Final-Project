@@ -1,4 +1,4 @@
-from analysis import get_traces, get_inter_vals, get_analysis
+import get_traces, get_analysis, get_inter_vals
 
 
 def do_stuff():

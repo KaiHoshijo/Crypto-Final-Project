@@ -1,7 +1,7 @@
 # http://cryptography.gmu.edu/documentation/fobos/cpa.html
 import numpy
 
-from analysis import get_analysis
+import get_analysis
 
 
 def calculate_inter_vals(plaintexts: [], subkeys: []) -> []:
