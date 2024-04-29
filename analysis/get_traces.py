@@ -1,3 +1,5 @@
+import re
+
 from numpy import genfromtxt
 import numpy as np
 import binascii
@@ -15,8 +17,6 @@ def get_traces():
         for wavename in os.listdir('waveforms'):
             # First two rows are name columns
             data = genfromtxt(f'waveforms/{wavename}', delimiter=',')[2:]
-            # TODO: delete time column because we only need voltage
-            #       numpy.delete(data, 0, 1)
             traces[i] = data
             i += 1
         # Save the traces so that this expensive operation doesn't occur often
