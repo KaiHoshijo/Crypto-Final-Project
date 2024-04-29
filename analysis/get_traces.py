@@ -56,7 +56,6 @@ def get_waveform():
         lines = f.readlines()
         # First two lines are key and iv
         key = lines[0].split(' ')
-
         data[key[0].lower] = fix_bytes(key[1].split(' '))
         iv = lines[1].split(' ')
         data[iv[0].lower] = fix_bytes(iv[1].split(' '))
