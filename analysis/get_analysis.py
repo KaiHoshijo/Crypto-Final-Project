@@ -114,7 +114,7 @@ def pick_subkey(power_estimates: [], power_traces: []) -> int:
     max_j = -1
     max_r = -1
     for i in range(all_subkeys):
-        for j in range(2000):
+        for j in range(1999):
             r = abs(correlation(i, j, power_estimates, power_traces))
             if r > max_r:
                 max_i = i

@@ -1,9 +1,11 @@
 import re
 
+import numpy
 from numpy import genfromtxt
 import numpy as np
 import binascii
 import os
+
 
 def get_traces():
     try:
@@ -11,7 +13,7 @@ def get_traces():
         traces = np.load('analysis/traces.npz')
         traces = traces[traces.files[0]]
     except FileNotFoundError:
-        traces = np.empty(shape=(2000, 2000, 2))  # Array of all the traces
+        traces = np.empty(shape=(1999, 2000, 2))  # Array of all the traces
         i = 0
         # If the traces don't already exist, load them
         for wavename in os.listdir('waveforms'):
@@ -22,6 +24,7 @@ def get_traces():
         # Save the traces so that this expensive operation doesn't occur often
         np.savez('analysis/traces.npz', traces)
     return traces
+
 
 def fix_bytes(hexstring: list) -> bytes:
     """
@@ -35,10 +38,11 @@ def fix_bytes(hexstring: list) -> bytes:
         # Update single bytes
         if len(hex) == 1:
             hex = '0' + hex
-        updated.append(hex)    
+        updated.append(hex)
     updated = ''.join(updated)
     # Convert str list to hexadecimal bytes
     return binascii.unhexlify(bytes(updated.encode()))
+
 
 def get_waveform():
     """
@@ -56,18 +60,41 @@ def get_waveform():
         lines = f.readlines()
         # First two lines are key and iv
         key = lines[0].split(' ')
-        data[key[0].lower] = fix_bytes(key[1].split(' '))
+        data[key[0].lower()] = fix_bytes(key[1].split(' '))
         iv = lines[1].split(' ')
-        data[iv[0].lower] = fix_bytes(iv[1].split(' '))
+        data[iv[0].lower()] = fix_bytes(iv[1].split(' '))
         # Rest are the waveform file with the input and output
-        for index in range(2, len(data), 2):
-            filename = data[index]
+        for index in range(2, len(lines), 3):
+            filename = lines[index]
             # The two values after the filename are the plaitext and ciphertext
-            plaintext = data[index + 1].split(' ')
+            plaintext = lines[index + 1].split(' ')
             # Converting the plaintext to hex
             plaintext = fix_bytes(plaintext[1].split(' '))
-            ciphertext = data[index + 2].split(' ')
+            ciphertext = lines[index + 2].split(' ')
             # Converting the ciphertext to hex
             ciphertext = fix_bytes(ciphertext[1].split(' '))
             data[filename] = [plaintext, ciphertext]
     return data
+
+
+def get_split_plaintexts() -> []:
+    """
+    Get list of plaintexts as integers. Results in a (16, 1999) matrix,
+    where there are 1999 sub-plaintexts for each of the 16 positions.
+    """
+    pattern = re.compile(pattern="input (.*)")
+    with open(file="waveforms.txt", mode="r") as f:
+        lines = f.readlines()
+
+    plaintexts = numpy.empty((16, 1999))
+
+    i = 0
+    for line in lines:
+        matched = pattern.match(line)
+        if matched:
+            plaintext = matched.group(1)
+            plaintext = plaintext.strip()
+            for j, subtext in iter(plaintext.split(" ")):
+                plaintexts[j][i] = int(subtext, 16)
+            i += 1
+    return plaintexts
