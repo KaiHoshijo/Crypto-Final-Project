@@ -7,15 +7,16 @@ def do_stuff():
 
     # 2. Calculate intermediate values for all d (plaintext block) and k (subkey) combinations
     # tried to follow step 3 in the article, where the plaintext and subkeys coming from?
-    # subkeys = get_analysis.gen_subkeys() # is this correct?
-    # all_inter_vals = get_inter_vals.calculate_inter_vals(plaintexts, subkeys)
+    plaintexts = get_traces.get_plaintexts()  # TODO: Read plaintexts from waveforms.txt
+    subkeys = get_analysis.gen_subkeys()
+    all_inter_vals = get_inter_vals.calculate_inter_vals(plaintexts, subkeys)
 
     # 3. Build power model h by calculating Hamming Weight for each intermediate value
-    # all_weights = get_analysis.calc_all_hamming(all_inter_vals) # is this what you mean?
-    power_estimates = "do stuff"
+    power_estimates = get_analysis.calc_all_hamming(all_inter_vals)
 
     # 4. Calculate correlation between power model h and traces t. Get subkey from the highest correlation.
-    subkey = get_analysis.pick_subkey(power_estimates, power_traces)
+    subkey_index = get_analysis.pick_subkey(power_estimates, power_traces)
+    subkey = subkeys[subkey_index]
 
     # 5. Somehow get from a subkey to the entire key?
     "what"

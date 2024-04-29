@@ -15,11 +15,17 @@ def calculate_val(plaintext, subkey):
     
     using XOR as a placeholder?
     """
-    
+
+    # TODO: I think this should be where we find the
+    #       intermediate value by passing the plaintext
+    #       and subkey into a subset of AES. Kai put that
+    #       together in get_analysis.estimate_power().
+
     val = plaintext ^ subkey
-    
+
     return val
-      
+
+
 def calculate_inter_vals(plaintexts: [], subkeys: []):
     """
     Wanna go through all combinations of the the plaintexts (d) and subkeys (k) combos
@@ -34,13 +40,12 @@ def calculate_inter_vals(plaintexts: [], subkeys: []):
     """
     num_d = len(plaintexts)
     num_k = len(subkeys)
-    V = [[0 for i in range(num_k)] for j in range(num_d)] # D x K matrix
-    
+    V = [[0 for i in range(num_k)] for j in range(num_d)]  # D x K matrix
+
     # calculate intermdiate value f(d, k) for all combos of d and k
     for i in range(num_d):
         for j in range(num_k):
             V[i][j] = calculate_val(plaintexts[i], subkeys[j])
-    
+
     # so each col in V is intermediate value calcualted for all d for one key
     return V
-    
