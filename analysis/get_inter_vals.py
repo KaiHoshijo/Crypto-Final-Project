@@ -1,34 +1,12 @@
 # http://cryptography.gmu.edu/documentation/fobos/cpa.html
+import numpy
 
-# not really sure where you guys wanna pull the plaintexts and subkeys from
-# unless i'm just blind and haven't seen them yet
+from analysis import get_analysis
 
-def calculate_val(plaintext, subkey):
+
+def calculate_inter_vals(plaintexts: [], subkeys: []) -> []:
     """
-    plaintext: specific plaintext
-    subkey: specific subkey
-    val: returned f(d, k) intermediate value
-    
-    calculate the specific intermediate value for the specified combo of plaintext and subkey
-    
-    is there a specific function we have to use here?
-    
-    using XOR as a placeholder?
-    """
-
-    # TODO: I think this should be where we find the
-    #       intermediate value by passing the plaintext
-    #       and subkey into a subset of AES. Kai put that
-    #       together in get_analysis.estimate_power().
-
-    val = plaintext ^ subkey
-
-    return val
-
-
-def calculate_inter_vals(plaintexts: [], subkeys: []):
-    """
-    Wanna go through all combinations of the the plaintexts (d) and subkeys (k) combos
+    Wanna go through all combinations of the plaintexts (d) and subkeys (k) combos
     
     plaintexts (d): gonna assume we have them in a list or something
     subkeys (k): also gonna assume we have them in a list or something
@@ -40,12 +18,12 @@ def calculate_inter_vals(plaintexts: [], subkeys: []):
     """
     num_d = len(plaintexts)
     num_k = len(subkeys)
-    V = [[0 for i in range(num_k)] for j in range(num_d)]  # D x K matrix
+    V = numpy.zeros((num_d, num_k))
 
-    # calculate intermdiate value f(d, k) for all combos of d and k
+    # calculate intermediate value f(d, k) for all combos of d and k
     for i in range(num_d):
         for j in range(num_k):
-            V[i][j] = calculate_val(plaintexts[i], subkeys[j])
+            V[i][j] = get_analysis.calc_intermediate(plaintexts[i], subkeys[j])
 
-    # so each col in V is intermediate value calcualted for all d for one key
+    # so each col in V is intermediate value calculated for all d for one key
     return V

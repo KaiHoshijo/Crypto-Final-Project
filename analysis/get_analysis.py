@@ -22,7 +22,7 @@ invSbox = [
 ]
 
 
-def hamming_weight(val: int):
+def hamming_weight(val: int) -> int:
     """
     val: the value to have its hamming weight calculated for
 
@@ -35,12 +35,13 @@ def hamming_weight(val: int):
     return weight
 
 
-def calc_all_hamming(inter_vals: []):
+def estimate_all_powers(inter_vals: []) -> []:
     """
     inter_vals: array of calculated intermediate values
     hamming_weights: array to hold all hamming weights for inter_vals
     
-    calculate hamming weights for all intermediate values and return?
+    Calculates Hamming weights for intermediate values, returning
+    the power estimation array.
     """
     hamming_weights = []
     for val in inter_vals:
@@ -50,18 +51,17 @@ def calc_all_hamming(inter_vals: []):
     return hamming_weights
 
 
-def estimate_power(cipher: int, guess: int):
+def calc_intermediate(ciphertext: int, subkey_guess: int) -> int:
     """
     ciphertext: The ciphertext to make the power estimate with
     guess: The guessed subkey for the current power trace
 
-    This will generate the Hamming Weight of the following
-    InvSubBytes(ciphertext XOR guessed key)
+    Calculate the intermediate value from InvSubBytes(ciphertext XOR guessed key)
     """
     # Calculate the inverse sub bytes
-    xored = cipher ^ guess
+    xored = ciphertext ^ subkey_guess
     inv = invSbox[(xored & 0xf0) >> 4][xored & 0x0f]
-    return hamming_weight(inv)
+    return inv
 
 
 def correlation(subkey_i: int, voltage_j: int, power_estimates_h: [], power_traces_t: []) -> float:
