@@ -1,4 +1,4 @@
-from analysis import get_traces, get_analysis
+from analysis import get_traces, get_inter_vals, get_analysis
 
 
 def do_stuff():
@@ -6,7 +6,8 @@ def do_stuff():
     power_traces = get_traces.get_traces()
 
     # 2. Calculate intermediate values for all d (plaintext block) and k (subkey) combinations
-    "do stuff"
+    # tried to follow step 3 in the article, where the plaintext and subkeys coming from?
+    # all_inter_vals = get_inter_vals.calculate_inter_vals(plaintexts, subkeys)
 
     # 3. Build power model h by calculating Hamming Weight for each intermediate value
     power_estimates = "do stuff"
