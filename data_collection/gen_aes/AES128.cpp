@@ -214,9 +214,10 @@ void AESTiny128::encryptBlock(uint8_t *output, const uint8_t *input)
         // Encrypt using the key schedule.
         AESCommon::subBytesAndShiftRows(state2, state1);
         if (round == 1) {
-            Serial.print("Output ");
+            Serial.print("output ");
             for (uint8_t a = 0; a < 16; a++) {
                 Serial.print(state2[a], HEX);
+                Serial.print(' ');
             }
             Serial.println();
         }

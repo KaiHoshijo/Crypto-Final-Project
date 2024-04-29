@@ -5,7 +5,7 @@
 #include "AES.h"
 
 // Number of times to generate and encrypt plaintext
-#define COUNT 400
+#define COUNT 1000
 
 TransistorNoiseSource noise(A1);
 CBC<AESTiny128> cbc;
@@ -25,15 +25,17 @@ void setup() {
   pinMode(A2, OUTPUT);
   Serial.begin(9600);
   // Output the key
-  Serial.print("Key ");
+  Serial.print("key ");
   for (uint8_t i = 0; i < 16; i++) {
     Serial.print(key[i], HEX);
+    Serial.print(' ');
   }
   Serial.println();
   // Output the iv
-  Serial.print("IV ");
+  Serial.print("iv ");
   for (uint8_t i = 0; i < 16; i++) {
     Serial.print(iv[i], HEX);
+    Serial.print(' ');
   }
   Serial.print('\n');
 }
@@ -49,9 +51,10 @@ void loop() {
     // Generate the plaintext
     RNG.rand(input, sizeof(input));
     // Output the newly generated plaintext
-    Serial.print("Input ");
+    Serial.print("input ");
     for (uint8_t j = 0; j < 16; j++) {
       Serial.print(input[j], HEX);
+      Serial.print(' ');
     }
     Serial.println();
     // Encrypting the plaintext using aes-cbc

@@ -18,7 +18,7 @@ Trigger Type: Rising
 
 INTERVAL = 0.5
 TIMEOUT = 100000
-WAVEFORM = 2000
+WAVEFORM = 1000
 PORT = 'COM7'
 
 rm = pyvisa.ResourceManager()
@@ -59,9 +59,7 @@ def read_serial():
     out = ''
     while ser.inWaiting() > 0:
         a = ser.read(1).decode()
-        if a == '\r':
-            print("Testing", a)
-        else:
+        if a != '\r':
             out += a
     return out
 
