@@ -14,8 +14,11 @@ def hamming_weight(val: int):
         val >>= 1 # Shift down by 1
     return weight
 
-def correlation(subkey_i: int, voltage_j: int, power_estimates_h: [], power_traces_t: []):
+def correlation(subkey_i: int, voltage_j: int, power_estimates_h: [], power_traces_t: []) -> float:
     """
+    Get Pearson correlation coefficient for a given subkey and voltage measurement
+    Returns [-1, 1] idk i'm not a stats nerd
+
     subkey_i: the subkey index
     voltage_j: the measured voltage index (for the trace)
     power_estimates_h: power consumption models, D plaintexts by I subkeys
@@ -45,3 +48,26 @@ def correlation(subkey_i: int, voltage_j: int, power_estimates_h: [], power_trac
     denominator = math.sqrt(s2 * s3)
 
     return numerator / denominator
+
+
+def gen_subkeys() -> []:
+    return [i for i in range(0, 256)]
+
+
+def pick_subkey(power_estimates: [], power_traces: []) -> int:
+    """
+    Find the highest r_i to get the subkey.
+    Returns the chosen subkey index
+    """
+    all_subkeys = gen_subkeys()
+    max_i = -1
+    max_j = -1
+    max_r = -1
+    for i in range(all_subkeys):
+        for j in range(2000):
+            r = abs(correlation(i, j, power_estimates, power_traces))
+            if r > max_r:
+                max_i = i
+                max_j = j
+                max_r = r
+    return max_i
