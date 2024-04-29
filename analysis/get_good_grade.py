@@ -18,3 +18,7 @@ def do_stuff():
     "what"
 
     pass
+
+
+if __name__ == '__main__':
+    do_stuff()
