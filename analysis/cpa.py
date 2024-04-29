@@ -8,12 +8,12 @@ import re
 import wfm2read_fast
 
 def read_wfm(infolder, num_traces=100):
-    print 'Reading WFMs from', infolder
+    print('Reading WFMs from', infolder)
     # Can add a check to see that we are not reading a file that is not
     # availabled
-    for file_count in xrange(1,num_traces+1):
+    for file_count in range(1,num_traces+1):
         fname = 'W%d.wfm' % file_count
-        print 'Reading %s [%d/%d]' % (fname, file_count, num_traces)
+        print('Reading %s [%d/%d]' % (fname, file_count, num_traces))
         trace_data = wfm2read_fast.wfm2read(infolder+'/'+fname)[0] 
         trace_trimmed = trace_data[:]
         try:
@@ -30,7 +30,7 @@ def read_pt(fname, num_traces):
     pt_list = np.zeros((num_traces, 16))
     line_num = 0
     for line in pt_file:
-        pt = map(lambda x:int(x, 16), line.rstrip().split(' '))
+        pt = [int(x, 16) for x in line.rstrip().split(' ')]
         pt_list[line_num] = np.array(pt)
         line_num += 1
     pt_file.close()
@@ -136,7 +136,7 @@ def new_corr(state, power_hypothesis_trace, trace):
     x_bar = xd1_new/(state['n']+1)
     y_bar = yd1_new/(state['n']+1)
 
-    c = xdy_new -
+    # c = xdy_new -
     
 
 def run_cpa_fast(traces, plaintext):
@@ -154,12 +154,12 @@ def run_cpa_fast(traces, plaintext):
 
     lines = np.zeros((size_plaintext, 256, num_traces))
     
-    for byte in xrange(size_plaintext):
+    for byte in range(size_plaintext):
         CC_for_byte_and_trace_num = None # [256 x trace_len]
         power_hypothesis = np.zeros((num_traces, 256))  # for one byte [num_traces x 256]
         
         # Create the power model from plaintext
-        for k in xrange(256):
+        for k in range(256):
             # XOR the plaintext byte with key byte and put the result through the S-BOX
             power_hypothesis[:, k] = pwr_model(plaintext[:, byte].astype(int), k)
         
@@ -176,7 +176,7 @@ def run_cpa_fast(traces, plaintext):
         start_state['x.y'] = np.dot(np.transpose(power_hypothesis), traces)
         start_state['n'] = 9
              
-        for trace_num in xrange(10, traces):
+        for trace_num in range(10, traces):
             state, CC_for_byte_and_trace_num = new_corr(state, power_hypothesis[trace_num], traces[trace_num])
             CC_for_byte_and_trace_num = np.abs(CC_for_byte_and_trace_num)
             lines[byte, :, trace_num] = np.max(CC_for_byte_and_trace_num, axis=1)
@@ -197,22 +197,22 @@ def run_cpa(traces, plaintext, num_traces=0, verbose=False):
     # Correlation Matrix [16 x (256 x trace_length)]
     CC = [None]*16 
     PH = [None]*16
-    for byte in xrange(16):
+    for byte in range(16):
         if verbose:
-            print 'Started analyzing key byte %d' % byte
+            print('Started analyzing key byte %d' % byte)
     
         # Power hypothesis matrix [num_traces x 256]
         if verbose:
-            print 'Creating power model'
+            print('Creating power model')
         power_hypothesis = np.zeros((num_traces, 256))
-        for k in xrange(256):
+        for k in range(256):
             # XOR the plaintext byte with key byte and put the result through the S-BOX
             pwr_model = np.vectorize(sbox_power)
             power_hypothesis[:, k] = pwr_model(plaintext[:, byte].astype(int), k)
         PH[byte] = power_hypothesis
     
         if verbose:
-            print 'Calculating correlation'
+            print('Calculating correlation')
         CC[byte] = np.abs(corr(power_hypothesis, traces))
         
         # --> do some operations here to find the correct byte of the key <--
@@ -220,13 +220,13 @@ def run_cpa(traces, plaintext, num_traces=0, verbose=False):
         max_key = np.argmax(max_samples)  # index of maximum key among maximumms in samples
         max_10_keys = np.argsort(max_samples)[::-1][:10]
         if verbose:
-            print 'max keys: ' + str(max_10_keys)
+            print('max keys: ' + str(max_10_keys))
         # print '\t',sorted([(value, i) for i,value in enumerate(max_samples)])
     # return CC, PH, x.1, y.1, x.x, y.y, x.y
     x_ones = np.ones((power_hypothesis.shape[1], power_hypothesis.shape[0]))
     xd1 = np.dot(power_hypothesis, x_ones)
-    print 'xd1: '
-    print xd1.shape
+    print('xd1: ')
+    print(xd1.shape)
     yd1 = np.dot(traces, np.ones((traces.shape[1], traces.shape[0])))
     xdx = np.dot(np.transpose(power_hypothesis), power_hypothesis)
     ydy = np.dot(np.transpose(traces), traces)
@@ -239,17 +239,17 @@ def run_cpa(traces, plaintext, num_traces=0, verbose=False):
 
 def run_key_evolution(traces, plaintext, limits):
     lines = np.zeros((16, 256, limits[1]-limits[0]+1))
-    for N in xrange(limits[0], limits[1]+1):
-        print 'Waveforms %d/%d' % (N, limits[1])
+    for N in range(limits[0], limits[1]+1):
+        print('Waveforms %d/%d' % (N, limits[1]))
         CC,_ = run_cpa(traces, plaintext, N, N==limits[1])
-        for byte in xrange(16):
+        for byte in range(16):
             lines[byte, :, N-limits[0]] = np.max(CC[byte], axis=1)
     return lines
 
 def plot_key_evolution(lines, limits, key):
-    for byte in xrange(16):
+    for byte in range(16):
         plt.subplot(4, 4, byte+1)
-        for line_num in xrange(256):
+        for line_num in range(256):
             if line_num != key[byte]:
                 plt.plot(np.arange(limits[0], limits[1]+1), lines[byte, line_num], color='gray')
         plt.plot(np.arange(limits[0], limits[1]+1), lines[byte, key[byte]], color='red')

@@ -6,7 +6,7 @@ def rd_unpack(f, format_str, byteorder):
     return struct.unpack(byteorder+format_str, f.read(struct.calcsize(format_str)))[0]
 
 def rd_unpack_a(f, num_bytes, format_str, byteorder):
-    return [rd_unpack(f, format_str, byteorder) for n in xrange(num_bytes)]
+    return [rd_unpack(f, format_str, byteorder) for n in range(num_bytes)]
 
 def get_edim(fid, byteorder, wfm_version):
     dim = {}
@@ -185,17 +185,17 @@ def wfm2read(filename, datapoints=None, step=1, startind=0):
     #checking of file name etc.
     file_ext = os.path.splitext(filename)[1]
     if (file_ext != '.wfm' or not os.path.exists(filename)):
-        print 'Invalid file name: ', filename
+        print('Invalid file name: ', filename)
         return None
 
     fid = open(filename, 'rb');
 
     if step < 1 or (int(step) != step):
-        print 'step must be a positive integer. Setting step to 1'
+        print('step must be a positive integer. Setting step to 1')
         step=1
 
     if startind < 0 or (int(startind) != startind):
-        print 'startind must be a positive integer. Setting startind to 0'
+        print('startind must be a positive integer. Setting startind to 0')
         startind = 0
 
     info = {}
@@ -209,7 +209,7 @@ def wfm2read(filename, datapoints=None, step=1, startind=0):
     #There's a misprinting in the SDK article, the ":" at the beginning of version number string is missing.
     wfm_version = int(info['versioning_number'].split('#')[1]);
     if (wfm_version > 3):
-        print 'wfm2read has only been tested with WFM file versions <= 3'
+        print('wfm2read has only been tested with WFM file versions <= 3')
 
     info['num_digits_in_byte_count'] = rd_unpack(fid,'B',byteorder)
     info['num_bytes_to_EOF'] = rd_unpack(fid,'i',byteorder)
@@ -307,7 +307,7 @@ def wfm2read(filename, datapoints=None, step=1, startind=0):
 
         # read data for the other frames from the file:
         # TODO: May want to change this so that we read multiple samples at a time for faster reads
-        for n in xrange(1, N):
+        for n in range(1, N):
             frames[n] = {}
             frames[n]['info'] = {}
 
@@ -317,7 +317,7 @@ def wfm2read(filename, datapoints=None, step=1, startind=0):
             frames[n]['info']['frac_sec'] = rd_unpack(fid,'d',byteorder)
             frames[n]['info']['GMT_sec'] = rd_unpack(fid,'i',byteorder)
 
-        for n in xrange(1, N):
+        for n in range(1, N):
             #wfm curve information
             frames[n]['info']['state_flags'] = rd_unpack(fid,'I',byteorder)
             frames[n]['info']['type_of_checksum'] = rd_unpack_a(fid,4,'b',byteorder)
@@ -347,16 +347,16 @@ def wfm2read(filename, datapoints=None, step=1, startind=0):
         if (wfm_version >= 3):
             data_format='B'
         else:
-            print 'invalid data format or error in file ', filename
+            print('invalid data format or error in file ', filename)
             return None
     elif info['ed1']['format'][0] == 7: 
         if (wfm_version >= 3):
             data_format='b'
         else:
-            print 'invalid data format or error in file ', filename
+            print('invalid data format or error in file ', filename)
             return None
     else:
-            print 'invalid data format or error in file ', filename
+            print('invalid data format or error in file ', filename)
             return None
 
     #read the curve data (first frame only if file contains fast frame data)
@@ -379,16 +379,16 @@ def wfm2read(filename, datapoints=None, step=1, startind=0):
         if datapoints<1 or (int(datapoints)!=datapoints):
             # set to maximum number of data points which can be securely read from the file, using startind and step parameters 
             datapoints=int(np.floor(nop/step))
-            print 'datapoints must be a positive integer. Setting datapoints to ', datapoints
+            print('datapoints must be a positive integer. Setting datapoints to ', datapoints)
         #maximum number of data points which can be securely read from the frame in the file, using startind and step parameters
         nop = np.floor(nop/step) 
         if datapoints > nop: #if more datapoints are requested than provided in the file
-            print 'The requested combination of input parameters datapoints, \
+            print('The requested combination of input parameters datapoints, \
                 step and startind would require at least %d data points in %s \
                 The actual number of data points in the trace is only %d.\n \
                 The number of data points returned by wfm2read is thus only %d \
                 instead of %d.' % ((datapoints-1)*step+startind+1, filename, \
-                    nop_all, nop, datapoints)
+                    nop_all, nop, datapoints))
         else:
             nop=datapoints
 
@@ -411,9 +411,9 @@ def wfm2read(filename, datapoints=None, step=1, startind=0):
     #print warning if there are wrong values because they are lying outside
     #the AD converter digitization window:
     if ind_over.size > 0: #ok
-        print ' %d over range value(s) in file %s' % (ind_over.size, filename)
+        print(' %d over range value(s) in file %s' % (ind_over.size, filename))
     if ind_under.size > 0: #ok
-        print ' %d under range value(s) in file %s' % (ind_under.size, filename)
+        print(' %d under range value(s) in file %s' % (ind_under.size, filename))
 
     if info['N']>0: #if file contains fast frame data and it is requested as output
         #copy data for first frame to the frame struct
@@ -423,7 +423,7 @@ def wfm2read(filename, datapoints=None, step=1, startind=0):
         frames[0]['ind_under']=ind_under;
     
         #get data for all remaining frames:
-        for n in xrange(1, N):
+        for n in range(1, N):
             #jump to the beginning of the curve buffer
             offset = byte_offset_nextframe + frames[n]['info']['data_start_offset'] \
                      + startind*info['num_bytes_per_point']
@@ -450,7 +450,7 @@ def wfm2read(filename, datapoints=None, step=1, startind=0):
                     nop=datapoints
     
             values = [0] * nop
-            for n in xrange(nop):
+            for n in range(nop):
                 values[n] = rd_unpack(fid,data_format,byteorder) 
                 if step > 1:
                     rd_unpack(fid,'%ds' % info['num_bytes_per_point']*(step-1),byteorder) 
@@ -467,9 +467,9 @@ def wfm2read(filename, datapoints=None, step=1, startind=0):
             #print warning if there are wrong values because they are lying outside
             #the AD converter digitization window:
             if frame[n]['ind_over'].size > 0: #ok
-                print ' %d over range value(s) in file %s' % (frame[n]['ind_over'].size, filename)
+                print(' %d over range value(s) in file %s' % (frame[n]['ind_over'].size, filename))
             if frame[n]['ind_under'].size > 0: #ok
-                print ' %d under range value(s) in file %s' % (frame[n]['ind_under'].size, filename)
+                print(' %d under range value(s) in file %s' % (frame[n]['ind_under'].size, filename))
     fid.close()
     return (y, t, info, ind_over, ind_under, frames)
 
