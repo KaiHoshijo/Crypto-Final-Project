@@ -2,6 +2,17 @@
 # http://cryptography.gmu.edu/documentation/fobos/cpa.html
 import math
 
+def hamming_weight(val: int):
+    """
+    val: the value to to have its hamming weight calculated for
+
+    Hamming Weight is the number of ones that a value contains
+    """
+    weight = 0
+    while val != 0:
+        weight += (val & 1) # check if lowest bit is one
+        val >>= 1 # Shift down by 1
+    return weight
 
 def correlation(subkey_i, voltage_j, power_estimates_h, power_traces_t):
     """
