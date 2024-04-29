@@ -11,6 +11,7 @@ def do_stuff():
     # all_inter_vals = get_inter_vals.calculate_inter_vals(plaintexts, subkeys)
 
     # 3. Build power model h by calculating Hamming Weight for each intermediate value
+    # all_weights = get_analysis.calc_all_hamming(all_inter_vals) # is this what you mean?
     power_estimates = "do stuff"
 
     # 4. Calculate correlation between power model h and traces t. Get subkey from the highest correlation.

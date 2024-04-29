@@ -34,6 +34,20 @@ def hamming_weight(val: int):
         val >>= 1  # Shift down by 1
     return weight
 
+def calc_all_hamming(inter_vals: []):
+    """
+    inter_vals: array of calculated intermediate values
+    hamming_weights: array to hold all hamming weights for inter_vals
+    
+    calculate hamming weights for all intermediate values and return?
+    """
+    hamming_weights = []
+    for val in inter_vals:
+        val_weight = hamming_weight(val)
+        hamming_weights.append(val_weight)
+        
+    return hamming_weights
+
 def estimate_power(cipher: int, guess: int):
     """
     ciphertext: The ciphertext to make the power estimate with

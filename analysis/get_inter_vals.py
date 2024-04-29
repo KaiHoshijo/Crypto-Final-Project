@@ -3,7 +3,7 @@
 # not really sure where you guys wanna pull the plaintexts and subkeys from
 # unless i'm just blind and haven't seen them yet
 
-def calculate_inter_vals(plaintexts, subkeys):
+def calculate_inter_vals(plaintexts: [], subkeys: []):
     """
     Wanna go through all combinations of the the plaintexts (d) and subkeys (k) combos
     
@@ -11,6 +11,9 @@ def calculate_inter_vals(plaintexts, subkeys):
     subkeys (k): also gonna assume we have them in a list or something
     
     I'll follow step 3 in the article above
+    
+    V needs to be ints right? Does this do that or..?
+    
     """
     num_d = len(plaintexts)
     num_k = len(subkeys)
@@ -26,6 +29,10 @@ def calculate_inter_vals(plaintexts, subkeys):
 
 def calculate_val(plaintext, subkey):
     """
+    plaintext: specific plaintext
+    subkey: specific subkey
+    val: returned f(d, k) intermediate value
+    
     calculate the specific intermediate value for the specified combo of plaintext and subkey
     
     is there a specific function we have to use here?
