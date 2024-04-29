@@ -7,6 +7,7 @@ def do_stuff():
 
     # 2. Calculate intermediate values for all d (plaintext block) and k (subkey) combinations
     # tried to follow step 3 in the article, where the plaintext and subkeys coming from?
+    # subkeys = get_analysis.gen_subkeys() # is this correct?
     # all_inter_vals = get_inter_vals.calculate_inter_vals(plaintexts, subkeys)
 
     # 3. Build power model h by calculating Hamming Weight for each intermediate value
