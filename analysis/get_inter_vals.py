@@ -3,6 +3,23 @@
 # not really sure where you guys wanna pull the plaintexts and subkeys from
 # unless i'm just blind and haven't seen them yet
 
+def calculate_val(plaintext, subkey):
+    """
+    plaintext: specific plaintext
+    subkey: specific subkey
+    val: returned f(d, k) intermediate value
+    
+    calculate the specific intermediate value for the specified combo of plaintext and subkey
+    
+    is there a specific function we have to use here?
+    
+    using XOR as a placeholder?
+    """
+    
+    val = plaintext ^ subkey
+    
+    return val
+      
 def calculate_inter_vals(plaintexts: [], subkeys: []):
     """
     Wanna go through all combinations of the the plaintexts (d) and subkeys (k) combos
@@ -26,22 +43,4 @@ def calculate_inter_vals(plaintexts: [], subkeys: []):
     
     # so each col in V is intermediate value calcualted for all d for one key
     return V
-
-def calculate_val(plaintext, subkey):
-    """
-    plaintext: specific plaintext
-    subkey: specific subkey
-    val: returned f(d, k) intermediate value
-    
-    calculate the specific intermediate value for the specified combo of plaintext and subkey
-    
-    is there a specific function we have to use here?
-    
-    using XOR as a placeholder?
-    """
-    
-    val = plaintext ^ subkey
-    
-    return val
-    
     
