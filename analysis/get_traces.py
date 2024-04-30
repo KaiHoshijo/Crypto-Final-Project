@@ -94,7 +94,7 @@ def get_split_plaintexts() -> []:
         if matched:
             plaintext = matched.group(1)
             plaintext = plaintext.strip()
-            for j, subtext in iter(plaintext.split(" ")):
+            for j, subtext in enumerate(plaintext.split(" ")):
                 plaintexts[j][i] = int(subtext, 16)
             i += 1
-    return plaintexts
+    return plaintexts.astype(int)

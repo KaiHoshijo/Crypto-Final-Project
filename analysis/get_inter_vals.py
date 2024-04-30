@@ -26,4 +26,4 @@ def calculate_inter_vals(plaintexts: [], subkeys: []) -> []:
             V[i][j] = get_analysis.calc_intermediate(plaintexts[i], subkeys[j])
 
     # so each col in V is intermediate value calculated for all d for one key
-    return V
+    return V.astype(int)

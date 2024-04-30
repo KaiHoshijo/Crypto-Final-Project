@@ -2,6 +2,8 @@
 # http://cryptography.gmu.edu/documentation/fobos/cpa.html
 import math
 
+import numpy
+
 invSbox = [
     [0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb],
     [0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb],
@@ -37,18 +39,19 @@ def hamming_weight(val: int) -> int:
 
 def estimate_all_powers(inter_vals: []) -> []:
     """
-    inter_vals: array of calculated intermediate values
+    inter_vals: array of calculated intermediate values: d (plaintext block) by k (subkey)
     hamming_weights: array to hold all hamming weights for inter_vals
     
     Calculates Hamming weights for intermediate values, returning
     the power estimation array.
     """
-    hamming_weights = []
-    for val in inter_vals:
-        val_weight = hamming_weight(val)
-        hamming_weights.append(val_weight)
+    hamming_weights = numpy.empty((len(inter_vals), len(inter_vals[0])))
+    for i, outer in enumerate(inter_vals):
+        for j, inner in enumerate(outer):
+            weight = hamming_weight(inner)
+            hamming_weights[i][j] = weight
 
-    return hamming_weights
+    return hamming_weights.astype(int)
 
 
 def calc_intermediate(ciphertext: int, subkey_guess: int) -> int:
@@ -113,7 +116,7 @@ def pick_subkey(power_estimates: [], power_traces: []) -> int:
     max_i = -1
     max_j = -1
     max_r = -1
-    for i in range(all_subkeys):
+    for i in range(len(all_subkeys)):
         for j in range(1999):
             r = abs(correlation(i, j, power_estimates, power_traces))
             if r > max_r:

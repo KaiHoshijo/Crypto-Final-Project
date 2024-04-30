@@ -24,6 +24,7 @@ def do_stuff():
         subkey_index = get_analysis.pick_subkey(power_estimates, power_traces)
         chosen_subkey = subkeys[subkey_index]
         key.append(chosen_subkey)
+        print(f"Subkey: {hex(chosen_subkey)}")
 
     hex_string_key = [hex(i) for i in key]
     hex_string_key = [i[2:] for i in hex_string_key]
