@@ -1,1 +1,2 @@
-found key: 79 56 EC FC 36 AA C4 E7 34 CA 42 B4 3C 3F D2 16
+found key (using plaintexts): 79 56 EC FC 36 AA C4 E7 34 CA 42 B4 3C 3F D2 16
+found key (using ciphertexts): 08 07 EC 61 52 E8 F2 47 1A 60 B1 E4 2A F5 B8 74

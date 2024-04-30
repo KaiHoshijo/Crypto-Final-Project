@@ -98,3 +98,25 @@ def get_split_plaintexts() -> []:
                 plaintexts[j][i] = int(subtext, 16)
             i += 1
     return plaintexts.astype(int)
+
+def get_split_ciphertexts() -> []:
+    """
+    Get list of ciphertexts as integers. Results in a (16, 1999) matrix,
+    where there are 1999 sub-ciphertexts for each of the 16 positions.
+    """
+    pattern = re.compile(pattern="output (.*)")
+    with open(file="waveforms.txt", mode="r") as f:
+        lines = f.readlines()
+
+    ciphertexts = numpy.empty((16, 1999))
+
+    i = 0
+    for line in lines:
+        matched = pattern.match(line)
+        if matched:
+            ciphertext = matched.group(1)
+            ciphertext = ciphertext.strip()
+            for j, subtext in enumerate(ciphertext.split(" ")):
+                ciphertexts[j][i] = int(subtext, 16)
+            i += 1
+    return ciphertexts.astype(int)

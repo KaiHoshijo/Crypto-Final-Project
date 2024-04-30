@@ -1,5 +1,6 @@
 import concurrent.futures
 import multiprocessing
+import time
 
 import get_traces, get_analysis, get_inter_vals
 
@@ -28,12 +29,15 @@ def run_for_section(i: int, plaintexts: [], power_traces: [], subkeys: []):
 
 
 def do_stuff():
+    time_started = time.time()
+    print(f"Time started: {time_started}")
     key = [0 for i in range(16)]
 
     # 1. Read traces t
     power_traces = get_traces.get_traces()
 
     plaintexts = get_traces.get_split_plaintexts()
+    # plaintexts = get_traces.get_split_ciphertexts()
     subkeys = get_analysis.gen_subkeys()
 
     # Setup multithreading:
@@ -55,7 +59,11 @@ def do_stuff():
 
     hex_string_key = [hex(i) for i in key]
     hex_string_key = [i[2:] for i in hex_string_key]
-    print(f"Key: 0x{''.join(hex_string_key)}")
+    print(f"\nKey: 0x{''.join(hex_string_key)}")
+
+    time_ended = time.time()
+    print(f"Time ended: {time_ended}")
+    print(f"Time delta: {time_ended - time_started} seconds")
 
 
 if __name__ == '__main__':
