@@ -4,7 +4,7 @@ import numpy
 import get_analysis
 
 
-def calculate_inter_vals(plaintexts: [], subkeys: []) -> []:
+def calculate_inter_vals(plaintexts: [], subkeys: [], reverse: bool = True) -> []:
     """
     Wanna go through all combinations of the plaintexts (d) and subkeys (k) combos
     
@@ -21,9 +21,14 @@ def calculate_inter_vals(plaintexts: [], subkeys: []) -> []:
     V = numpy.zeros((num_d, num_k))
 
     # calculate intermediate value f(d, k) for all combos of d and k
-    for i in range(num_d):
-        for j in range(num_k):
-            V[i][j] = get_analysis.calc_intermediate(plaintexts[i], subkeys[j])
+    if reverse:
+        for i in range(num_d):
+            for j in range(num_k):
+                V[i][j] = get_analysis.calc_intermediate(plaintexts[i], subkeys[j])
+    else:
+        for i in range(num_d):
+            for j in range(num_k):
+                V[i][j] = get_analysis.calc_intermediate_forward(plaintexts[i], subkeys[j])
 
     # so each col in V is intermediate value calculated for all d for one key
     return V.astype(int)

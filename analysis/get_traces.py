@@ -99,6 +99,7 @@ def get_split_plaintexts() -> []:
             i += 1
     return plaintexts.astype(int)
 
+
 def get_split_ciphertexts() -> []:
     """
     Get list of ciphertexts as integers. Results in a (16, 1999) matrix,
@@ -120,3 +121,25 @@ def get_split_ciphertexts() -> []:
                 ciphertexts[j][i] = int(subtext, 16)
             i += 1
     return ciphertexts.astype(int)
+
+
+def get_iv() -> []:
+    """
+    Get IV as a 16-element list of integers
+    """
+    pattern = re.compile(pattern="iv (.*)")
+    with open(file="waveforms.txt", mode="r") as f:
+        lines = f.readlines()
+
+    iv = [0 for i in range(16)]
+
+    for line in lines:
+        matched = pattern.match(line)
+        if matched:
+            ciphertext = matched.group(1)
+            ciphertext = ciphertext.strip()
+            for j, subtext in enumerate(ciphertext.split(" ")):
+                iv[j] = int(subtext, 16)
+            break
+
+    return iv
